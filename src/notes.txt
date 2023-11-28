@@ -1,0 +1,262 @@
+Content
+
+1.fetch() or Axios
+2.Implementing simple CRUD
+
+*************************************************************************************************************************
+
+1.Axios
+
+===>Axios is a library that helps us to make http requests.
+    http requests or API requests க்காக Axios என்ற library பயன்படுகிறது.
+
+===>It returns a promise.
+    இது promise ஐ return செய்யும்.
+
+===>Axios will internally use fetch API to make http requests.
+    Axios ல் fetch என்ற library ஐ பயன்படுத்துகிறோம்.
+
+===>We can handle Axios calls in two ways 
+    1.Synchronous  =>using then and catch
+    2.ASynchronous =>using async and await
+
+===>Axios ஐ install செய்ய பயன்படுத்தும் command line
+    npm install axios
+
+===>Example
+
+//! Axios Example
+//! Async & await
+
+import axios from 'axios'
+import React from 'react'
+
+function App() {
+
+  const fetchPosts = async() => {
+
+  try {
+    console.log("Fetching Posts .....");
+    const response = await axios.get ("https://restcountries.com/v2/all");
+    console.log(response.data);    
+  } catch (error) {
+    console.log("Error Fetching Address .....",error); 
+  }
+}
+
+  return (
+    <div>
+    <button onClick={fetchPosts}> Kindly see the console </button>
+    </div>
+  )
+}
+
+export default App
+
+    
+output:
+
+restcountries என்ற APIல் உள்ள தகவல்கள் அனைத்தும் console ல் display ஆகும்.
+ஒருவேளை API ன் address தவறாக கொடுக்கப்பட்டால் Error 404 என்று வரும்.
+
+                    ****************************************************************
+
+//! Axios Example
+//! then & catch
+
+import axios from 'axios'
+import React from 'react'
+
+function App() {
+
+  const fetchPosts = () => {
+    axios.get("https://restcountries.com/v2/all")
+    .then((response) => {
+      console.log(response.data);
+    })
+
+    .catch((error) => {
+      console.log("Error Fetching Address .....",error);
+    })
+  }
+
+  return (
+    <div>
+    <button onClick={fetchPosts}> Kindly see the console </button>
+    </div>
+  )
+}
+
+export default App
+
+
+
+output: Same as Above
+
+restcountries என்ற APIல் உள்ள தகவல்கள் அனைத்தும் console ல் display ஆகும்.
+ஒருவேளை API ன் address தவறாக கொடுக்கப்பட்டால் Error 404 என்று வரும்.
+
+*************************************************************************************************************************
+
+2.CRUD
+
+C => Create
+R => Read
+U => Update
+D => Delete
+
+R => Read Opeartions Example:
+
+import React, { useState } from 'react'
+
+function App(props) {
+
+  const [notes,setNotes] = useState(props.notes);
+  return (
+    <div>
+      <h1>BOX OFFICE MOVIES</h1>
+      <ul>
+        {
+          notes.map(note => 
+            <li key={note.id}> {note.content} </li>
+            )
+        }
+      </ul>
+    </div>
+  )
+}
+
+export default App
+
+
+Step 1: Define the data notes
+
+const notes = [
+
+  {
+    id : 1,2,3.,,,etc
+    content : "RAJINI @ BAASHA",
+    important : true,
+  },
+];
+
+
+Step 2: Pass the data notes as props to the App component
+ReactDOM.createRoot(document.getElementById('root')).
+render(<App notes={notes} />)
+
+
+Step 3: Read the notes list and render it here
+ notes.map (note => 
+            <li> {note.content} </li>)
+
+
+Step 4: Mention the props
+function App(props)
+
+
+Step 5: Define a state
+const [notes,setNotes] = useState(props.notes);
+
+
+Step 6: Warning a Message So detected Error
+<li key={note.id} > {note.content} </li>
+
+
+output:
+நாம் main.jsx ல் கொடுத்த content ஆனது display ஆகிறது.
+இது CRUD ன் Read Opeartion உடைய output ஆகும்.
+
+                    ****************************************************************
+
+//! C => Create Opeartions Example:
+
+import React, { useRef, useState } from 'react'
+
+function App(props) {
+
+  const [notes,setNotes] = useState(props.notes);
+
+  // Define a contentRef to access and manipulate the content element
+  const newNoteContentRef = useRef(null);
+
+  // Add a new state
+  const [newNoteContent,setNewNoteContent] = useState('');
+
+  const [newNoteImport,setNewNoteImport] = useState('');
+
+  <select onChange={e=> setNewNoteImportant (e.target.value) }></select>
+
+  const addNote = (event) => {
+    event.preventDefault();
+
+  // Create a newNote Object
+  let noteObject = {
+    id : notes.length + 1 ,
+    content : newNoteContent,
+    important : newNoteImport === 'true',
+  }
+  setNotes(notes.concat(noteObject));
+
+  // Clear all inputs
+  setNewNoteContent('');
+  setNewNoteContent('');
+
+  newNoteContentRef.current.focus();
+  }
+
+  return (
+    <div>
+      <h1>BOX OFFICE MOVIES</h1>
+      <ul>
+        {
+          notes.map(note => 
+            <li key={note.id}> {note.content} </li>
+            )
+        }
+      </ul>
+
+      <hr></hr>
+
+      <h2>Add a New Note</h2>
+
+      <form onSubmit={addNote}>
+        <label>
+          Content: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input 
+            type='text'
+            ref={newNoteContentRef}
+            value={newNoteContent}
+            onChange={e => setNewNoteContent(e.target.value)}
+          />
+        </label>
+
+        <br></br><br></br>
+
+        <label>Is Important : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <select>
+            <option disable> --select-- </option>
+            <option> true </option>
+            <option> false </option>
+          </select>
+          </label>
+
+          <br></br><br></br>
+
+          <button type='Sumbit'>Add a New Movie Name </button>
+
+      </form>
+    </div>
+  )
+}
+
+export default App
+
+
+output:
+நாம் main.jsx ல் கொடுத்த content ஆனது display ஆகிறது.
+அதனுடன் நாம் கொடுத்த Buttonகளும் Add ஆகி வரும்.
+அதில் நாம் ஏதேனும் உள்ளீடாக கொடுத்து மேலே உள்ள content உடன் சேர்க்க முடியும்.
+இது CRUD ன்  Create Opeartion உடைய output ஆகும்.
+
+*************************************************************************************************************************
